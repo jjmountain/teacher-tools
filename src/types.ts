@@ -8,5 +8,7 @@ export type TimerAction = {
 };
 
 export type DisplayState = {
-  seconds: number;
+  hours: string;
+  minutes: string;
+  seconds: string;
 };

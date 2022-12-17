@@ -23,7 +23,7 @@ const reducer = (
     case "PLAY":
       return { ...state, timerState: "playing" };
     case "PAUSE":
-      return { ...state, timerState: "stopped" };
+      return { ...state, timerState: "paused" };
     case "RESET":
       return {
         seconds: 0,
@@ -34,11 +34,15 @@ const reducer = (
   }
 };
 
-const Display = ({ seconds }: DisplayState) => {
+const Display = ({ seconds, minutes, hours }: DisplayState) => {
   return (
     <div className="w-full flex justify-center h-24 mt-8 border-gray-500 ">
-      <div className="h-full w-1/3 border-2 border-gray-500 bg-white text-5xl flex items-center justify-center">
-        {seconds}
+      <div className="h-full w-96 px-20 border-2 border-gray-500 bg-white text-5xl grid grid-cols-5">
+        <div className="flex items-center justify-center">{hours}</div>
+        <div className="mt-1.5 align-middle text-center text-gray-600">:</div>
+        <div className="flex items-center justify-center">{minutes}</div>
+        <div className="mt-1.5 align-middle text-center text-gray-600">:</div>
+        <div className="flex items-center justify-center">{seconds}</div>
       </div>
     </div>
   );
@@ -63,7 +67,7 @@ const Controls = ({
 
   return (
     <div className="flex h-full flex-row cursor-pointer items-center justify-center ">
-      <PlayButton onClick={toggle} />
+      <PlayButton state={state} onClick={toggle} />
       <ResetButton onClick={reset} />
     </div>
   );
@@ -75,6 +79,21 @@ const App = () => {
   const { timerState } = state;
 
   const idRef = React.useRef<ReturnType<typeof setInterval | any>>(0);
+
+  const formatSeconds = (seconds: number) => {
+    return `0${seconds % 60}`.slice(-2);
+  };
+
+  const formatMinutes = (seconds: number) => {
+    const minutes: string = `${Math.floor(seconds / 60)}`;
+    const getMinutes = `0${+minutes % 60}`.slice(-2);
+
+    return getMinutes;
+  };
+
+  const formatHours = (seconds: number) => {
+    return `0${Math.floor(seconds / 3600)}`.slice(-2);
+  };
 
   useEffect(() => {
     if (timerState === "playing") {
@@ -89,9 +108,19 @@ const App = () => {
   }, [timerState]);
 
   return (
-    <div className="h-screen flex justify-center max-w-7xl bg-white">
-      <div className="flex flex-col text-4xl my-10 h-96 w-1/2 border-2 bg-blue-900 border-gray-500">
-        <Display seconds={state.seconds} />
+    <div
+      className="h-screen flex flex-col justify-center items-center max-w-7xl"
+      style={{
+        backgroundImage: "linear-gradient(to right, #43e97b 0%, #38f9d7 100%)",
+      }}
+    >
+      <div className="text-5xl text-gray-800">React Stopwatch</div>
+      <div className="flex flex-col text-4xl my-10 h-96 w-1/2 border-2 bg-slate-700 border-gray-500 rounded">
+        <Display
+          seconds={formatSeconds(state.seconds)}
+          minutes={formatMinutes(state.seconds)}
+          hours={formatHours(state.seconds)}
+        />
         <Controls state={state} dispatch={dispatch} />
       </div>
     </div>
