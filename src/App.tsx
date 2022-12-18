@@ -122,17 +122,14 @@ const App = () => {
   }, [timerState]);
 
   return (
-    <div
-      className="h-screen"
-      style={{
-        backgroundImage: "linear-gradient(to right, #43e97b 0%, #38f9d7 100%)",
-      }}
-    >
+    <div className="h-screen background">
       <div className="mx-auto h-screen max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-between items-center">
         <div className="flex w-full flex-row justify-end mr-7">
           <a
             href="https://github.com/jjmountain/teachers-timer"
             target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Github"
           >
             <img className="h-12 w-12" src={GithubLogo} alt="" />
           </a>

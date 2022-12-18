@@ -17,6 +17,10 @@ a {
   font-family: "Miltonian Tattoo", cursive;
 }
 
+.background {
+  background: linear-gradient(to right, #43e97b 0%, #38f9d7 100%);
+}
+
 .stopwatch-display {
   font-family: "Orbitron", sans-serif;
 }
