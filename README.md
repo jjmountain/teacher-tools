@@ -2,7 +2,9 @@
 
 Simple stopwatch timer for teachers to use in their classrooms.
 
-It is a web app that can be used on any device with a web browser. It is designed to be used on a projector or TV screen so that the timer can be seen by the entire class.
+A web app that can be used on any device with a web browser. It is designed to be used on a projector or TV screen so that the timer can be seen by the entire class.
+
+[Live demo](https://teachers-tools.netlify.app)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
