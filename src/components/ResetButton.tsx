@@ -8,7 +8,7 @@ export const ResetButton = ({ onClick }: any) => {
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        strokeWidth="1.5"
+        strokeWidth="1"
         stroke="currentColor"
         className="w-10 h-10 md:w-16 md:h-16"
       >

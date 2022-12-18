@@ -7,7 +7,7 @@ export const PlayButton = ({ onClick, state }: any) => {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.5"
+        strokeWidth="1"
         d="M15.75 5.25v13.5m-7.5-13.5v13.5"
       />
     );
@@ -34,7 +34,7 @@ export const PlayButton = ({ onClick, state }: any) => {
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
-        className=" w-10 md:w-16 h-10 md:h-16 fill-green-300 group-hover:fill-green-500 stroke-gray-900"
+        className="w-10  h-10 md:w-16 md:h-16 fill-green-300 group-hover:fill-green-500 stroke-gray-900"
       >
         {state.timerState === "playing" && <PausedPath />}
         {(state.timerState === "paused" || state.timerState === "stopped") && (

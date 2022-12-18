@@ -141,7 +141,7 @@ const App = () => {
           <div className="title text-5xl mt-8 text-gray-800 text-center">
             Stopwatch
           </div>
-          <div className="flex flex-col my-10 h-96 w-10/12 bg-gray-700 rounded-xl">
+          <div className="flex flex-col my-10 h-96 w-10/12 bg-gray-700/90 rounded-xl">
             <Display
               seconds={formatSeconds(state.seconds)}
               minutes={formatMinutes(state.seconds)}
