@@ -3,6 +3,7 @@ import { PlayButton } from "./components/PlayButton";
 import { ResetButton } from "./components/ResetButton";
 import { TimerState, TimerAction, DisplayState } from "./types";
 import "./App.css";
+import GithubLogo from "./github-mark.png";
 
 const initialState: TimerState = {
   timerState: "stopped",
@@ -36,13 +37,26 @@ const reducer = (
 
 const Display = ({ seconds, minutes, hours }: DisplayState) => {
   return (
-    <div className="w-full flex justify-center h-24 mt-8 border-gray-500 ">
-      <div className="h-full w-96 px-20 border-2 border-gray-500 bg-white text-5xl grid grid-cols-5">
-        <div className="flex items-center justify-center">{hours}</div>
-        <div className="mt-1.5 align-middle text-center text-gray-600">:</div>
-        <div className="flex items-center justify-center">{minutes}</div>
-        <div className="mt-1.5 align-middle text-center text-gray-600">:</div>
-        <div className="flex items-center justify-center">{seconds}</div>
+    <div className="stopwatch-display w-full flex justify-center h-24 mt-8">
+      <div className="h-full px-8 md:px-20  bg-gray-800/20 text-yellow-500 text-4xl sm:text-6xl md:text-7xl lg:text-8xl grid grid-cols-8 gap-4 overflow-hidden">
+        <div className="flex items-center justify-center mr-2 ">{hours[0]}</div>
+        <div className="flex items-center justify-center ">{hours[1]}</div>
+
+        <div className="flex items-center justify-center mb-1 text-gray-600">
+          :
+        </div>
+        <div className="flex items-center justify-center mr-2">
+          {minutes[0]}
+        </div>
+        <div className="flex items-center justify-center ">{minutes[1]}</div>
+
+        <div className="flex items-center justify-center mb-1 text-gray-600">
+          :
+        </div>
+        <div className="flex items-center justify-center mr-2">
+          {seconds[0]}
+        </div>
+        <div className="flex items-center justify-center ">{seconds[1]}</div>
       </div>
     </div>
   );
@@ -109,19 +123,44 @@ const App = () => {
 
   return (
     <div
-      className="h-screen flex flex-col justify-center items-center max-w-7xl"
+      className="h-screen"
       style={{
         backgroundImage: "linear-gradient(to right, #43e97b 0%, #38f9d7 100%)",
       }}
     >
-      <div className="text-5xl text-gray-800">React Stopwatch</div>
-      <div className="flex flex-col text-4xl my-10 h-96 w-1/2 border-2 bg-slate-700 border-gray-500 rounded">
-        <Display
-          seconds={formatSeconds(state.seconds)}
-          minutes={formatMinutes(state.seconds)}
-          hours={formatHours(state.seconds)}
-        />
-        <Controls state={state} dispatch={dispatch} />
+      <div className="mx-auto h-screen max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-between items-center">
+        <div className="flex w-full flex-row justify-end mr-7">
+          <a
+            href="https://github.com/jjmountain/teachers-timer"
+            target="_blank"
+          >
+            <img className="h-12 w-12" src={GithubLogo} alt="" />
+          </a>
+        </div>
+        <div className="flex justify-center flex-col items-center">
+          <div className="title text-5xl mt-8 text-gray-800 text-center">
+            Stopwatch
+          </div>
+          <div className="flex flex-col my-10 h-96 w-10/12 bg-gray-700 rounded-xl">
+            <Display
+              seconds={formatSeconds(state.seconds)}
+              minutes={formatMinutes(state.seconds)}
+              hours={formatHours(state.seconds)}
+            />
+            <Controls state={state} dispatch={dispatch} />
+          </div>
+        </div>
+        <div className="text-lg">
+          Built in React and Typescript by{" "}
+          <a
+            href="https://github.com/jjmountain"
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-700"
+          >
+            @jjmountain
+          </a>
+        </div>
       </div>
     </div>
   );

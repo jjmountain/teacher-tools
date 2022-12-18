@@ -10,7 +10,7 @@ export const ResetButton = ({ onClick }: any) => {
         viewBox="0 0 24 24"
         strokeWidth="1.5"
         stroke="currentColor"
-        className="w-10 h-10 "
+        className="w-10 h-10 md:w-16 md:h-16"
       >
         <path
           strokeLinecap="round"
