@@ -124,27 +124,29 @@ const App = () => {
   return (
     <div className="h-screen background">
       <div className="mx-auto h-screen max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-between items-center">
-        <div className="flex w-full flex-row justify-end mr-7">
-          <a
-            href="https://github.com/jjmountain/teachers-timer"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Github"
-          >
-            <img className="h-12 w-12" src={GithubLogo} alt="" />
-          </a>
-        </div>
-        <div className="flex justify-center flex-col items-center">
-          <div className="title text-5xl mt-8 text-gray-800 text-center">
-            Stopwatch
+        <div>
+          <div className="flex w-full flex-row justify-end mr-7">
+            <a
+              href="https://github.com/jjmountain/teachers-timer"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Github"
+            >
+              <img className="h-12 w-12" src={GithubLogo} alt="" />
+            </a>
           </div>
-          <div className="flex flex-col my-10 h-96 w-10/12 bg-gray-700/90 rounded-xl">
-            <Display
-              seconds={formatSeconds(state.seconds)}
-              minutes={formatMinutes(state.seconds)}
-              hours={formatHours(state.seconds)}
-            />
-            <Controls state={state} dispatch={dispatch} />
+          <div className="mt-8 flex justify-center flex-col items-center">
+            <div className="title text-5xl mt-8 text-gray-800 text-center">
+              stopwatch
+            </div>
+            <div className="flex flex-col my-10 h-96 w-10/12 bg-gray-700/90 rounded-xl">
+              <Display
+                seconds={formatSeconds(state.seconds)}
+                minutes={formatMinutes(state.seconds)}
+                hours={formatHours(state.seconds)}
+              />
+              <Controls state={state} dispatch={dispatch} />
+            </div>
           </div>
         </div>
         <div className="text-lg">
