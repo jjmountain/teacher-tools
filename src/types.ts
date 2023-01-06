@@ -4,7 +4,7 @@ export type TimerState = {
 };
 
 export type TimerAction = {
-  type: "PLAY" | "PAUSE" | "RESET" | "TICK";
+  type: "SET" | "PLAY" | "PAUSE" | "RESET" | "TICK";  
 };
 
 export type DisplayState = {
@@ -12,3 +12,16 @@ export type DisplayState = {
   minutes: string;
   seconds: string;
 };
+
+
+export const setClock = (clockInput: string[]) => {
+  return({
+    type: 'SET',
+    clockInput
+  })
+}
+
+export type TimerActionPayload = {
+  type: "SET" | "PLAY" | "PAUSE" | "RESET" | "TICK"; 
+  payload: any;
+}
