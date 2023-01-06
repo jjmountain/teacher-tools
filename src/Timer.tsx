@@ -7,6 +7,8 @@ import './timer.css';
 
 const alarm = require('./sounds/alarm-beep.wav');
 const alarmSound = new Audio(alarm);
+const warning = require('./sounds/warning.wav');
+const warningSound = new Audio(warning);
 
 const initialState: TimerState = {
   timerState: 'stopped',
@@ -35,6 +37,11 @@ const reducer = (
     case "PAUSE":
       return { ...state, timerState: "paused" };
     case "RESET":
+      return {
+        seconds: toSeconds(action.payload),
+        timerState: "stopped",
+      };
+    case "ALARM":
       return {
         seconds: 0,
         timerState: "stopped",
@@ -76,11 +83,16 @@ export const Display = ({ seconds, minutes, hours }: DisplayState) => {
 const Controls = ({
   dispatch,
   state,
+  clockInput,
 }: {
   state: TimerState;
   dispatch: Dispatch<TimerActionPayload>;
+  clockInput: string[];
 }) => {
-  const reset = () => dispatch({ type: "RESET", payload: null });
+  const reset = () => {
+    alarmSound.pause();
+    dispatch({ type: "RESET", payload: clockInput });
+  }
 
   const toggle = () => {
     if (state.timerState === "paused" || state.timerState === "stopped") {
@@ -100,6 +112,7 @@ const Controls = ({
 
 const Timer = () => {
 
+  const [warningThreshold, setWarningThreshold] = useState(0);
   const [state, dispatch] = useReducer(reducer, initialState);
   const { timerState } = state;
   const idRef = React.useRef<ReturnType<typeof setInterval | any>>(0);
@@ -145,14 +158,16 @@ const Timer = () => {
   const alarm = () => {
     if (state.timerState === 'playing' && state.seconds <= 0) {
       alarmSound.play();
-      dispatch({type: 'RESET', payload: null});
+      dispatch({type: 'ALARM', payload: null});
     }
   }
 
   useEffect(() => {
+    if (state.timerState === 'playing' && state.seconds <= warningThreshold && state.seconds > 0) {
+      warningSound.play();
+    }
     alarm();
-  }, [state.seconds])
-
+  }, [state.seconds]);
 
 
   return (
@@ -169,13 +184,21 @@ const Timer = () => {
           />
         </div>
         <div className='main-controls'>
-          <Controls state={state} dispatch={dispatch}/>
+          <Controls state={state} dispatch={dispatch} clockInput={clockInput}/>
         </div>
 
         <div className='warning-controls'>
-
+          <label>Warning Threshold: {warningThreshold}
+            <input 
+              type="range" 
+              min="0"
+              max="15"
+              onChange={(e) => setWarningThreshold(parseInt(e.target.value))}
+              // style={getBackgroundSize()}
+              value={warningThreshold}
+            />
+          </label>
         </div>
-
         <div className='quick-settings'>
 
         </div>
@@ -183,7 +206,8 @@ const Timer = () => {
 
     </div>
   )
-}
+  
+};
 
 
 export default Timer;
