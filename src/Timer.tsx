@@ -23,29 +23,35 @@ const toSeconds = (timeInput: string[]) => {
   return seconds + minutes * 60 + hours * 3600;
 };
 
+
+const clockString = (timeInput: string[]) => {
+
+};
+
+
 const reducer = (
   state: typeof initialState,
   action: TimerActionPayload
 ): TimerState => {
   switch (action.type) {
+    case "PRESET":
+      return { ...state, seconds: action.payload};
     case "SET":
-      return { ...state, seconds: toSeconds(action.payload)}
+      return { ...state, seconds: toSeconds(action.payload)};
+    case "DELETE":
+      return { ...state, seconds: action.payload}
     case "TICK":
       return { ...state, seconds: state.seconds - 1 };
     case "PLAY":
+      return { ...state, seconds: toSeconds(action.payload), timerState: "playing" };
+    case "RESTART":
       return { ...state, timerState: "playing" };
     case "PAUSE":
       return { ...state, timerState: "paused" };
     case "RESET":
-      return {
-        seconds: toSeconds(action.payload),
-        timerState: "stopped",
-      };
-    case "ALARM":
-      return {
-        seconds: 0,
-        timerState: "stopped",
-      };
+      return { ...state, seconds: toSeconds(action.payload), timerState: "stopped" };
+    case "ZERO":
+      return { ...state, seconds: 0, timerState: "stopped" };
     default:
       throw new Error();
   }
@@ -85,10 +91,12 @@ const Controls = ({
   dispatch,
   state,
   clockInput,
+  setPresetting,
 }: {
   state: TimerState;
   dispatch: Dispatch<TimerActionPayload>;
   clockInput: string[];
+  setPresetting: any;
 }) => {
   const reset = () => {
     alarmSound.pause();
@@ -96,25 +104,29 @@ const Controls = ({
   }
 
   const toggle = () => {
-    if (state.timerState === "paused" || state.timerState === "stopped") {
-      if (state.timerState === "stopped") reduceBigTime();
-      dispatch({ type: "PLAY", payload: null });
+    if (state.timerState === "stopped") {
+      reduceBigTime();
+      setPresetting(false);
+      dispatch({ type: "PLAY", payload: clockInput });
     } else if (state.timerState === "playing") {
       dispatch({ type: "PAUSE", payload: null });
+    } else {
+      setPresetting(false);
+      dispatch({ type: "RESTART", payload: null });
     }
   };
 
   const reduceBigTime = () => {
-    console.log('reducing big time')
     if (parseInt(clockInput[2]) > 5) {
       clockInput[2] = '5';
-      clockInput[2] = '9';
+      clockInput[3] = '9';
     };
-    if (parseInt(clockInput[5]) > 5) {
-      clockInput[5] = '5';
-      clockInput[6] = '9';
+    if (parseInt(clockInput[4]) > 5) {
+      clockInput[4] = '5';
+      clockInput[5] = '9';
     };
-    dispatch({type: 'SET', payload: clockInput})
+    console.log('reducing big time to ', clockInput)
+    dispatch({type: "SET", payload: clockInput})
   }
 
   return (
@@ -128,6 +140,7 @@ const Controls = ({
 const Timer = () => {
 
   const [warningThreshold, setWarningThreshold] = useState(0);
+  const [presetting, setPresetting] = useState(true)
   const [state, dispatch] = useReducer(reducer, initialState);
   const { timerState } = state;
   const idRef = React.useRef<ReturnType<typeof setInterval | any>>(0);
@@ -170,8 +183,9 @@ const Timer = () => {
       timeArray.shift();
       timeArray.push(lastDigit);
       setClockInput(timeArray);
-      console.log(timeArray)
-      dispatch({ type: "SET", payload: timeArray });
+      console.log(timeArray);
+      setPresetting(true);
+      dispatch({ type: "PRESET", payload: timeArray});
     } else {
       // TODO: deal with delete and with numbers greater than 59 
     }
@@ -180,7 +194,7 @@ const Timer = () => {
   const alarm = () => {
     if (state.timerState === 'playing' && state.seconds <= 0) {
       alarmSound.play();
-      dispatch({type: 'ALARM', payload: null});
+      dispatch({type: 'ZERO', payload: null});
     }
   }
 
@@ -197,6 +211,7 @@ const Timer = () => {
   let cursorGreen2: any;
 
   document.addEventListener('click', () => {
+    alarmSound.pause();
     const timeEntryField = document.getElementById('time-entry-field');
     const cursor = document.getElementById('cursor');
     if (timeEntryField && cursor) {
@@ -212,9 +227,27 @@ const Timer = () => {
   
   const allowTimeSetting = () => {
     // TODO: refactor and remove redundancy
+    setClockInput(['0','0','0','0','0','0']);
+    dispatch({ type: "ZERO", payload: null });
     const timeEntryField = document.getElementById('time-entry-field');
     const cursor = document.getElementById('cursor');
     if (timeEntryField && cursor) {
+      timeEntryField.addEventListener('keydown', (e) => {
+        if (e.keyCode === 8 || e.which === 8) {
+          // TODO: add deletion functionality
+          e.preventDefault();
+
+          // dispatch({ type: "DELETE", payload: state.seconds - 100});
+
+          // console.log('clockinput is', clockInput)
+          // let clockArray = state.seconds;
+          // clockArray.unshift('0');
+          // clockArray.pop();
+          // console.log('clockarray is', clockArray)
+          // dispatch({ type: 'PRESET', payload: clockArray});
+          // setClockInput(clockArray);
+        }
+      })
       console.log('time entry clicked')
       timeEntryField.style.backgroundColor = "green";
       timeEntryField.focus();
@@ -242,17 +275,22 @@ const Timer = () => {
         <input id='time-entry-field' className='h-0 w-0' onChange={addDigit} value={clockInput.join('')}/>
         <div onClick={allowTimeSetting} className="clock">
           <Display
-            seconds={formatSeconds(state.seconds)}
-            minutes={formatMinutes(state.seconds)}
-            hours={formatHours(state.seconds)}
+            seconds={presetting ? clockInput.slice(4,6).join('') : formatSeconds(state.seconds)}
+            minutes={presetting ? clockInput.slice(2,4).join('') : formatMinutes(state.seconds)}
+            hours={presetting ? clockInput.slice(0,2).join('') : formatHours(state.seconds)}
           />
         </div>
-        <div className='main-controls'>
-          <Controls state={state} dispatch={dispatch} clockInput={clockInput}/>
+        <div className='main-controls mt-5 mb-5'>
+          <Controls 
+            state={state} 
+            dispatch={dispatch} 
+            clockInput={clockInput}
+            setPresetting={setPresetting} 
+          />
         </div>
 
         <div className='warning-controls flex flex-col items-center'>
-          <label htmlFor='slider'>Warning Threshold: {warningThreshold} Seconds </label>
+          <label className="text-white mb-5" htmlFor='slider'>Warning Threshold: {warningThreshold} Seconds </label>
           <input 
             type="range" 
             min="0"
