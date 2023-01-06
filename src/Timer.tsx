@@ -55,14 +55,14 @@ const reducer = (
 export const Display = ({ seconds, minutes, hours }: DisplayState) => {
   return (
     <div className="stopwatch-display w-full flex justify-center h-24 mt-8">
-      <div className="h-full px-8 md:px-20  bg-gray-800/20 text-yellow-500 text-4xl sm:text-6xl md:text-7xl lg:text-8xl grid grid-cols-8 gap-4 overflow-hidden">
+      <div id="clock-face" className="relative h-full px-8 md:px-20  bg-gray-800/20 text-yellow-500 text-4xl sm:text-6xl md:text-7xl lg:text-8xl grid grid-cols-8 gap-4 overflow-hidden">
         <div className="flex items-center justify-center mr-2 ">{hours[0]}</div>
         <div className="flex items-center justify-center ">{hours[1]}</div>
 
         <div className="flex items-center justify-center mb-1 text-gray-600">
           :
         </div>
-        <div className="flex items-center justify-center mr-2">
+        <div className="flex items-center justify-center mr-2 ">
           {minutes[0]}
         </div>
         <div className="flex items-center justify-center ">{minutes[1]}</div>
@@ -73,7 +73,8 @@ export const Display = ({ seconds, minutes, hours }: DisplayState) => {
         <div className="flex items-center justify-center mr-2">
           {seconds[0]}
         </div>
-        <div className="flex items-center justify-center ">{seconds[1]}</div>
+        <div id='last-digit' className="flex items-center justify-center">{seconds[1]}</div>
+        <div id='cursor' className="h-100px absolute right-14 border-5 border-solid border-indigo-300"></div>
       </div>
     </div>
   );
@@ -96,11 +97,25 @@ const Controls = ({
 
   const toggle = () => {
     if (state.timerState === "paused" || state.timerState === "stopped") {
+      if (state.timerState === "stopped") reduceBigTime();
       dispatch({ type: "PLAY", payload: null });
     } else if (state.timerState === "playing") {
       dispatch({ type: "PAUSE", payload: null });
     }
   };
+
+  const reduceBigTime = () => {
+    console.log('reducing big time')
+    if (parseInt(clockInput[2]) > 5) {
+      clockInput[2] = '5';
+      clockInput[2] = '9';
+    };
+    if (parseInt(clockInput[5]) > 5) {
+      clockInput[5] = '5';
+      clockInput[6] = '9';
+    };
+    dispatch({type: 'SET', payload: clockInput})
+  }
 
   return (
     <div className="flex h-full flex-row cursor-pointer items-center justify-center ">
@@ -149,10 +164,17 @@ const Timer = () => {
 
   const addDigit = (e: any) => {
     let timeArray = clockInput;
-    timeArray.shift();
-    timeArray.push(e.target.value[e.target.value.length - 1]);
-    setClockInput(timeArray);
-    dispatch({ type: "SET", payload: timeArray });
+    let nums = '0123456789';
+    let lastDigit = e.target.value[e.target.value.length - 1];
+    if (nums.includes(lastDigit)) {
+      timeArray.shift();
+      timeArray.push(lastDigit);
+      setClockInput(timeArray);
+      console.log(timeArray)
+      dispatch({ type: "SET", payload: timeArray });
+    } else {
+      // TODO: deal with delete and with numbers greater than 59 
+    }
   } 
 
   const alarm = () => {
@@ -170,13 +192,55 @@ const Timer = () => {
   }, [state.seconds]);
 
 
+  let cursorBlinker: any;
+  let cursorGreen: any;
+  let cursorGreen2: any;
+
+  document.addEventListener('click', () => {
+    const timeEntryField = document.getElementById('time-entry-field');
+    const cursor = document.getElementById('cursor');
+    if (timeEntryField && cursor) {
+      if (timeEntryField !== document.activeElement && cursorBlinker) {
+        clearInterval(cursorBlinker);
+        cursor.style.border = 'none';
+        if (cursorGreen) clearTimeout(cursorGreen);
+        if (cursorGreen2) clearTimeout(cursorGreen2);
+      }
+    }
+  })
+
+  
+  const allowTimeSetting = () => {
+    // TODO: refactor and remove redundancy
+    const timeEntryField = document.getElementById('time-entry-field');
+    const cursor = document.getElementById('cursor');
+    if (timeEntryField && cursor) {
+      console.log('time entry clicked')
+      timeEntryField.style.backgroundColor = "green";
+      timeEntryField.focus();
+      cursor.style.height = "100%";
+      cursor.style.borderRight = "3px solid purple";
+      cursorGreen = setTimeout(() => {
+        cursor.style.borderRight = "3px solid green";
+      }, 1000)
+      cursorBlinker = setInterval(() => {
+        cursor.style.borderRight = "3px solid purple";
+        cursorGreen2 = setTimeout(() => {
+          cursor.style.borderRight = "3px solid green";
+        }, 1000)
+      }, 2000)
+    }
+
+  }
+
+
   return (
     <div className="timer-page">
       
       <div className='timer-body'>
         <h1 className='title'>Timer</h1>
-        <input onChange={addDigit}/>
-        <div className="clock">
+        <input id='time-entry-field' className='h-0 w-0' onChange={addDigit} value={clockInput.join('')}/>
+        <div onClick={allowTimeSetting} className="clock">
           <Display
             seconds={formatSeconds(state.seconds)}
             minutes={formatMinutes(state.seconds)}
@@ -187,17 +251,17 @@ const Timer = () => {
           <Controls state={state} dispatch={dispatch} clockInput={clockInput}/>
         </div>
 
-        <div className='warning-controls'>
-          <label>Warning Threshold: {warningThreshold}
-            <input 
-              type="range" 
-              min="0"
-              max="15"
-              onChange={(e) => setWarningThreshold(parseInt(e.target.value))}
-              // style={getBackgroundSize()}
-              value={warningThreshold}
-            />
-          </label>
+        <div className='warning-controls flex flex-col items-center'>
+          <label htmlFor='slider'>Warning Threshold: {warningThreshold} Seconds </label>
+          <input 
+            type="range" 
+            min="0"
+            max="15"
+            onChange={(e) => setWarningThreshold(parseInt(e.target.value))}
+            // style={getBackgroundSize()}
+            value={warningThreshold}
+            id='slider'
+          />
         </div>
         <div className='quick-settings'>
 
