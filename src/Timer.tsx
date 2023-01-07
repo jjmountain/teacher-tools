@@ -285,8 +285,11 @@ const Timer = () => {
 
 
   return (
-    <div className="timer-page">
-      
+    <div className="timer-page flex flex-col justify-between items-center">
+      <nav className="h-100">
+        <a className="text-blue-700 m-10" href='/' >Home</a>
+        <a className="text-blue-700" href='/stopwatch' >Stopwatch</a>
+      </nav>
       <div className='timer-body rounded-lg h-900'>
         <h1 className='title'>Timer</h1>
         <input id='time-entry-field' className='h-0 w-0' onChange={addDigit} />
@@ -330,6 +333,26 @@ const Timer = () => {
         </div>
       </div>
 
+      <div className="text-lg">
+          Built in React and Typescript by {" "}
+          <a
+            href="https://github.com/jjmountain"
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-700"
+          >
+            @jjmountain
+          </a>
+          {" "} and {" "}
+          <a
+            href="https://github.com/mmoses1127"
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-700"
+          >
+            @mmoses1127
+          </a>
+        </div>
     </div>
   )
   
