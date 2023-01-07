@@ -122,7 +122,7 @@ const App = () => {
   }, [timerState]);
 
   return (
-    <div className="h-screen background">
+    <div className="h-screen bg-white">
       <div className="mx-auto h-screen max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-between items-center">
         <div>
           <div className="flex w-full flex-row justify-end mr-7">
