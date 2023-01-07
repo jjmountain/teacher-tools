@@ -38,8 +38,6 @@ const reducer = (
       return { ...state, seconds: action.payload};
     case "SET":
       return { ...state, seconds: toSeconds(action.payload)};
-    case "DELETE":
-      return { ...state, seconds: action.payload}
     case "TICK":
       return { ...state, seconds: state.seconds - 1 };
     case "PLAY":
@@ -142,6 +140,7 @@ const Timer = () => {
   const [warningThreshold, setWarningThreshold] = useState(0);
   const [presetting, setPresetting] = useState(true)
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [reminderInterval, setReminderInterval] = useState(-1)
   const { timerState } = state;
   const idRef = React.useRef<ReturnType<typeof setInterval | any>>(0);
 
@@ -160,9 +159,19 @@ const Timer = () => {
     return `0${Math.floor(seconds / 3600)}`.slice(-2);
   };
 
+  const checkForReminder = () => {
+    if (state.seconds > 0 && state.seconds % (60 * reminderInterval) === 0) {
+      let msg = new SpeechSynthesisUtterance();
+      let mins = state.seconds / 60
+      msg.text = mins === 1 ? `${state.seconds / 60} minute remains` : `${state.seconds / 60} minutes remain`;
+      window.speechSynthesis.speak(msg);
+    }
+  }
+
   useEffect(() => {
     if (timerState === "playing") {
       idRef.current = setInterval(() => {
+
         dispatch({ type: "TICK", payload: null });
       }, 1000);
     }
@@ -172,8 +181,17 @@ const Timer = () => {
     };
   }, [timerState]);
 
+  useEffect(() => {
+    if (reminderInterval > 0) checkForReminder();
+  }, [state.seconds])
+
 
   const [clockInput, setClockInput] = useState(['0','0','0','0','0','0']);
+  const clockInputRef = useRef(clockInput);
+  const _setClockInput = (value: string[]) => {
+    clockInputRef.current = value;
+    setClockInput(value);
+  }
 
   const addDigit = (e: any) => {
     let timeArray = clockInput;
@@ -182,7 +200,7 @@ const Timer = () => {
     if (nums.includes(lastDigit)) {
       timeArray.shift();
       timeArray.push(lastDigit);
-      setClockInput(timeArray);
+      _setClockInput(timeArray);
       console.log(timeArray);
       setPresetting(true);
       dispatch({ type: "PRESET", payload: timeArray});
@@ -224,30 +242,30 @@ const Timer = () => {
     }
   })
 
+  let deleteListener: any;
   
   const allowTimeSetting = () => {
     // TODO: refactor and remove redundancy
-    setClockInput(['0','0','0','0','0','0']);
+    _setClockInput(['0','0','0','0','0','0']);
     dispatch({ type: "ZERO", payload: null });
     const timeEntryField = document.getElementById('time-entry-field');
     const cursor = document.getElementById('cursor');
     if (timeEntryField && cursor) {
-      timeEntryField.addEventListener('keydown', (e) => {
-        if (e.keyCode === 8 || e.which === 8) {
-          // TODO: add deletion functionality
-          e.preventDefault();
 
-          // dispatch({ type: "DELETE", payload: state.seconds - 100});
+      if (!deleteListener) {
+        deleteListener = timeEntryField.addEventListener('keydown', (e) => {
+          if (e.keyCode === 8 || e.which === 8) {
+            e.preventDefault();
+            let newClockArray = clockInputRef.current;
+            newClockArray.unshift('0');
+            newClockArray.pop();
+            _setClockInput(newClockArray);
+            console.log(newClockArray)
+            dispatch({ type: "PRESET", payload: newClockArray});
+          }
+        });
+      }
 
-          // console.log('clockinput is', clockInput)
-          // let clockArray = state.seconds;
-          // clockArray.unshift('0');
-          // clockArray.pop();
-          // console.log('clockarray is', clockArray)
-          // dispatch({ type: 'PRESET', payload: clockArray});
-          // setClockInput(clockArray);
-        }
-      })
       console.log('time entry clicked')
       timeEntryField.style.backgroundColor = "green";
       timeEntryField.focus();
@@ -263,16 +281,15 @@ const Timer = () => {
         }, 1000)
       }, 2000)
     }
-
-  }
+  };
 
 
   return (
     <div className="timer-page">
       
-      <div className='timer-body'>
+      <div className='timer-body rounded-lg h-900'>
         <h1 className='title'>Timer</h1>
-        <input id='time-entry-field' className='h-0 w-0' onChange={addDigit} value={clockInput.join('')}/>
+        <input id='time-entry-field' className='h-0 w-0' onChange={addDigit} />
         <div onClick={allowTimeSetting} className="clock">
           <Display
             seconds={presetting ? clockInput.slice(4,6).join('') : formatSeconds(state.seconds)}
@@ -290,18 +307,25 @@ const Timer = () => {
         </div>
 
         <div className='warning-controls flex flex-col items-center'>
-          <label className="text-white mb-5" htmlFor='slider'>Warning Threshold: {warningThreshold} Seconds </label>
+          <label className="text-white mb-5" htmlFor='slider'>Countdown Warning Threshold: {warningThreshold} Seconds </label>
           <input 
             type="range" 
             min="0"
             max="15"
             onChange={(e) => setWarningThreshold(parseInt(e.target.value))}
-            // style={getBackgroundSize()}
             value={warningThreshold}
             id='slider'
           />
         </div>
-        <div className='quick-settings'>
+        <div className='remaining-time-reminders mt-5'>
+        <label className='text-white mr-5' htmlFor="cars">Remind me of remaining time:</label>
+
+        <select onChange={(e) => setReminderInterval(parseInt(e.target.value))} name="intervals" id="intervals">
+          <option value="-1">never</option>
+          <option value="1">every minute</option>
+          <option value="5">every 5 minutes</option>
+          <option value="10">every 10 minutes</option>
+        </select>
 
         </div>
       </div>

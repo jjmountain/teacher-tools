@@ -22,6 +22,6 @@ export const setClock = (clockInput: string[]) => {
 }
 
 export type TimerActionPayload = {
-  type: "SET" | "PRESET" | "DELETE" | "PLAY" | "PAUSE" | "RESTART" | "RESET" | "TICK" | "ZERO"; 
+  type: "SET" | "PRESET" | "PLAY" | "PAUSE" | "RESTART" | "RESET" | "TICK" | "ZERO"; 
   payload: any;
 }
