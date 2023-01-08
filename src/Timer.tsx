@@ -325,11 +325,8 @@ const Timer = () => {
 
 
   return (
-    <div className="timer-page flex flex-col justify-between items-center bg-gradient-to-r from-cyan-500 to-blue-700 min-h-screen">
-      <nav className="h-100">
-        <a className="text-blue-700 mt-5 m-10" href='/' >Home</a>
-        <a className="text-blue-700 mt-5 m-10" href='/stopwatch' >Stopwatch</a>
-      </nav>
+    <div className="timer-page flex flex-col justify-center items-center bg-gradient-to-r from-cyan-500 to-blue-700 min-h-[calc(100vh-100px)]">
+
       <div className='timer-body flex flex-col my-10 h-160 w-10/12 bg-gray-700/90 rounded-xl max-w-[800px]'>
         <h1 className='title text-[#B2DB1B] text-5xl mt-8 text-center'>Timer</h1>
         <input id='time-entry-field' className='h-0 w-0' onChange={addDigit} />
@@ -374,26 +371,6 @@ const Timer = () => {
         <div></div>
       </div>
 
-      <div className="text-lg">
-          Built in React and Typescript by {" "}
-          <a
-            href="https://github.com/jjmountain"
-            target="_blank"
-            rel="noreferrer"
-            className="text-blue-700"
-          >
-            @jjmountain
-          </a>
-          {" "} and {" "}
-          <a
-            href="https://github.com/mmoses1127"
-            target="_blank"
-            rel="noreferrer"
-            className="text-blue-700"
-          >
-            @mmoses1127
-          </a>
-        </div>
     </div>
   )
   

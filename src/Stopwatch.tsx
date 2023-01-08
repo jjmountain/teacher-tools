@@ -122,8 +122,8 @@ const Stopwatch = () => {
   }, [timerState]);
 
   return (
-    <div className="h-screen background">
-      <div className="mx-auto h-screen max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-between items-center">
+    <div className="h-screen background min-h-[calc(100vh-100px)] max-h-[calc(100vh-100px)]">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-between items-center ">
         <div>
           <div className="flex w-full flex-row justify-end mr-7">
             <a
@@ -149,7 +149,7 @@ const Stopwatch = () => {
             </div>
           </div>
         </div>
-        <div className="text-lg">
+        {/* <div className="text-lg">
           Built in React and Typescript by{" "}
           <a
             href="https://github.com/jjmountain"
@@ -159,7 +159,7 @@ const Stopwatch = () => {
           >
             @jjmountain
           </a>
-        </div>
+        </div> */}
       </div>
     </div>
   );
