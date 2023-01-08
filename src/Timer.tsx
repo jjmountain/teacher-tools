@@ -1,9 +1,8 @@
-// import { Display } from "./Stopwatch";
 import React, { useEffect, useState, useRef, Dispatch, useReducer } from "react";
 import { TimerState, TimerActionPayload, DisplayState }  from "./types";
 import { PlayButton } from "./components/PlayButton";
 import { ResetButton } from "./components/ResetButton";
-import './timer.css';
+import { AddMinuteButton } from "./components/AddMinuteButton";
 
 const alarm = require('./sounds/alarm-beep.wav');
 const alarmSound = new Audio(alarm);
@@ -24,20 +23,15 @@ const toSeconds = (timeInput: string[]) => {
 };
 
 
-const clockString = (timeInput: string[]) => {
-
-};
-
-
 const reducer = (
   state: typeof initialState,
   action: TimerActionPayload
 ): TimerState => {
   switch (action.type) {
     case "PRESET":
-      return { ...state, seconds: action.payload};
+      return { ...state, seconds: action.payload };
     case "SET":
-      return { ...state, seconds: toSeconds(action.payload)};
+      return { ...state, seconds: toSeconds(action.payload) };
     case "TICK":
       return { ...state, seconds: state.seconds - 1 };
     case "PLAY":
@@ -50,6 +44,8 @@ const reducer = (
       return { ...state, seconds: toSeconds(action.payload), timerState: "stopped" };
     case "ZERO":
       return { ...state, seconds: 0, timerState: "stopped" };
+    case "ADDMIN":
+      return { ...state, seconds: state.seconds + 60 };
     default:
       throw new Error();
   }
@@ -57,9 +53,27 @@ const reducer = (
 
 
 export const Display = ({ seconds, minutes, hours }: DisplayState) => {
+
+  const clockFace = document.getElementById('clock-face');
+  const children = clockFace?.children as HTMLCollectionOf<HTMLElement>;
+
+  useEffect(() => {
+    if (children?.length) {
+      let yellow = false;
+      for (let i = 0; i < children?.length; i++) {
+        if ('123456789'.includes(children[i].innerHTML)) yellow = true;
+        if (yellow) {
+          children[i].style.color = 'rgb(219, 190, 27)';
+        } else {
+          children[i].style.color = '#6B7280';
+        }
+      }
+    }
+  }, [seconds, minutes, hours]);
+
   return (
     <div className="stopwatch-display w-full flex justify-center h-24 mt-8">
-      <div id="clock-face" className="relative h-full px-8 md:px-20  bg-gray-800/20 text-yellow-500 text-4xl sm:text-6xl md:text-7xl lg:text-8xl grid grid-cols-8 gap-4 overflow-hidden">
+      <div id="clock-face" className="relative h-full px-8 md:px-20  bg-gray-800/20 text-gray-500 text-4xl sm:text-6xl md:text-7xl lg:text-8xl grid grid-cols-8 gap-4 overflow-hidden">
         <div className="flex items-center justify-center mr-2 ">{hours[0]}</div>
         <div className="flex items-center justify-center ">{hours[1]}</div>
 
@@ -89,11 +103,15 @@ const Controls = ({
   dispatch,
   state,
   clockInput,
+  _setClockInput,
+  presetting,
   setPresetting,
 }: {
   state: TimerState;
   dispatch: Dispatch<TimerActionPayload>;
   clockInput: string[];
+  _setClockInput: any;
+  presetting: boolean;
   setPresetting: any;
 }) => {
   const reset = () => {
@@ -123,14 +141,41 @@ const Controls = ({
       clockInput[4] = '5';
       clockInput[5] = '9';
     };
-    console.log('reducing big time to ', clockInput)
     dispatch({type: "SET", payload: clockInput})
+  }
+
+  const addMinute = () => {
+    if (!presetting) {
+      dispatch({ type: "ADDMIN", payload: null})
+    } else {
+      let tempClockArray: number[] = [];
+      clockInput.forEach(digit => tempClockArray.push(parseInt(digit)));
+      tempClockArray[3] += 1;
+      if (tempClockArray[3] > 9) {
+        tempClockArray[3] = 0
+        tempClockArray[2] += 1;
+        if (tempClockArray[2] > 5) {
+          tempClockArray[2] = 0
+          tempClockArray[1] += 1;
+          if (tempClockArray[1] > 9) {
+            tempClockArray[1] = 0
+            tempClockArray[0] += 1;
+            if (tempClockArray[0] > 9) {
+              tempClockArray[0] = 9
+            }
+          }
+        }
+      }
+      dispatch({type: "PRESET", payload: tempClockArray})
+      _setClockInput(tempClockArray)
+    }
   }
 
   return (
     <div className="flex h-full flex-row cursor-pointer items-center justify-center ">
       <PlayButton state={state} onClick={toggle} />
       <ResetButton onClick={reset} />
+      <AddMinuteButton addMinute={addMinute}/>
     </div>
   );
 };
@@ -171,7 +216,6 @@ const Timer = () => {
   useEffect(() => {
     if (timerState === "playing") {
       idRef.current = setInterval(() => {
-
         dispatch({ type: "TICK", payload: null });
       }, 1000);
     }
@@ -201,11 +245,8 @@ const Timer = () => {
       timeArray.shift();
       timeArray.push(lastDigit);
       _setClockInput(timeArray);
-      console.log(timeArray);
       setPresetting(true);
       dispatch({ type: "PRESET", payload: timeArray});
-    } else {
-      // TODO: deal with delete and with numbers greater than 59 
     }
   } 
 
@@ -256,17 +297,16 @@ const Timer = () => {
         deleteListener = timeEntryField.addEventListener('keydown', (e) => {
           if (e.keyCode === 8 || e.which === 8) {
             e.preventDefault();
-            let newClockArray = clockInputRef.current;
-            newClockArray.unshift('0');
-            newClockArray.pop();
-            _setClockInput(newClockArray);
-            console.log(newClockArray)
-            dispatch({ type: "PRESET", payload: newClockArray});
+            let tempClockArray = clockInputRef.current;
+            tempClockArray.unshift('0');
+            tempClockArray.pop();
+            console.log(tempClockArray)
+            _setClockInput(tempClockArray);
+            dispatch({ type: "PRESET", payload: tempClockArray});
           }
         });
       }
 
-      console.log('time entry clicked')
       timeEntryField.style.backgroundColor = "green";
       timeEntryField.focus();
       cursor.style.height = "100%";
@@ -285,13 +325,13 @@ const Timer = () => {
 
 
   return (
-    <div className="timer-page flex flex-col justify-between items-center">
+    <div className="timer-page flex flex-col justify-between items-center bg-gradient-to-r from-cyan-500 to-blue-700 min-h-screen">
       <nav className="h-100">
-        <a className="text-blue-700 m-10" href='/' >Home</a>
-        <a className="text-blue-700" href='/stopwatch' >Stopwatch</a>
+        <a className="text-blue-700 mt-5 m-10" href='/' >Home</a>
+        <a className="text-blue-700 mt-5 m-10" href='/stopwatch' >Stopwatch</a>
       </nav>
-      <div className='timer-body rounded-lg h-900'>
-        <h1 className='title'>Timer</h1>
+      <div className='timer-body flex flex-col my-10 h-160 w-10/12 bg-gray-700/90 rounded-xl max-w-[800px]'>
+        <h1 className='title text-[#B2DB1B] text-5xl mt-8 text-center'>Timer</h1>
         <input id='time-entry-field' className='h-0 w-0' onChange={addDigit} />
         <div onClick={allowTimeSetting} className="clock">
           <Display
@@ -305,12 +345,14 @@ const Timer = () => {
             state={state} 
             dispatch={dispatch} 
             clockInput={clockInput}
+            _setClockInput={_setClockInput}
+            presetting={presetting}
             setPresetting={setPresetting} 
           />
         </div>
 
         <div className='warning-controls flex flex-col items-center'>
-          <label className="text-white mb-5" htmlFor='slider'>Countdown Warning Threshold: {warningThreshold} Seconds </label>
+          <label className="text-white mb-2 select-none" htmlFor='slider'>Countdown Warning Threshold: {warningThreshold} Seconds </label>
           <input 
             type="range" 
             min="0"
@@ -320,17 +362,16 @@ const Timer = () => {
             id='slider'
           />
         </div>
-        <div className='remaining-time-reminders mt-5'>
-        <label className='text-white mr-5' htmlFor="cars">Remind me of remaining time:</label>
-
-        <select onChange={(e) => setReminderInterval(parseInt(e.target.value))} name="intervals" id="intervals">
-          <option value="-1">never</option>
-          <option value="1">every minute</option>
-          <option value="5">every 5 minutes</option>
-          <option value="10">every 10 minutes</option>
-        </select>
-
+        <div className='remaining-time-reminders mt-5 flex flex-row justify-center mb-5'>
+          <label className='text-white mr-5' htmlFor="cars">Remind me of remaining time:</label>
+          <select onChange={(e) => setReminderInterval(parseInt(e.target.value))} name="intervals" id="intervals">
+            <option value="-1">never</option>
+            <option value="1">every minute</option>
+            <option value="5">every 5 minutes</option>
+            <option value="10">every 10 minutes</option>
+          </select>
         </div>
+        <div></div>
       </div>
 
       <div className="text-lg">

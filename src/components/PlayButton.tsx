@@ -27,7 +27,7 @@ export const PlayButton = ({ onClick, state }: any) => {
   return (
     <div
       onClick={onClick}
-      className="bg-white group rounded-full border p-5 border-gray-600 active:bg-gray-300 mr-5"
+      className="bg-white group rounded-full border p-5 border-gray-600 active:bg-gray-300 mr-3 ml-3"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
