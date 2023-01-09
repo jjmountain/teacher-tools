@@ -10,6 +10,7 @@ const Header = () => {
     <>
       <Link to="/">
         <header className="w-full h-24 flex justify-center items-center text-4xl">
+          <div></div>
           Teacher Tools
         </header>
       </Link>

@@ -38,11 +38,11 @@ const reducer = (
 export const Display = ({ seconds, minutes, hours }: DisplayState) => {
   return (
     <div className="stopwatch-display w-full flex justify-center h-24 mt-8">
-      <div className="h-full px-8 md:px-20  bg-gray-800/20 text-yellow-500 text-4xl sm:text-6xl md:text-7xl lg:text-8xl grid grid-cols-8 gap-4 overflow-hidden">
+      <div className="h-full px-8 md:px-20   text-gray-900 text-4xl sm:text-6xl md:text-7xl lg:text-8xl grid grid-cols-8 gap-4 overflow-hidden">
         <div className="flex items-center justify-center mr-2 ">{hours[0]}</div>
         <div className="flex items-center justify-center ">{hours[1]}</div>
 
-        <div className="flex items-center justify-center mb-1 text-gray-600">
+        <div className="flex items-center justify-center mb-1 text-gray-900">
           :
         </div>
         <div className="flex items-center justify-center mr-2">
@@ -50,7 +50,7 @@ export const Display = ({ seconds, minutes, hours }: DisplayState) => {
         </div>
         <div className="flex items-center justify-center ">{minutes[1]}</div>
 
-        <div className="flex items-center justify-center mb-1 text-gray-600">
+        <div className="flex items-center justify-center mb-1 text-gray-900">
           :
         </div>
         <div className="flex items-center justify-center mr-2">
@@ -122,24 +122,11 @@ const Stopwatch = () => {
   }, [timerState]);
 
   return (
-    <div className="h-screen background min-h-[calc(100vh-100px)] max-h-[calc(100vh-100px)]">
+    <div className="h-screen min-h-[calc(100vh-100px)] max-h-[calc(100vh-100px)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-between items-center ">
         <div>
-          <div className="flex w-full flex-row justify-end mr-7">
-            <a
-              href="https://github.com/jjmountain/teachers-timer"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Github"
-            >
-              <img className="h-12 w-12" src={GithubLogo} alt="" />
-            </a>
-          </div>
           <div className="mt-8 flex justify-center flex-col items-center">
-            <div className="title text-5xl mt-8 text-gray-800 text-center">
-              stopwatch
-            </div>
-            <div className="flex flex-col my-10 h-96 w-10/12 bg-gray-700/90 rounded-xl">
+            <div className="flex flex-col my-10 h-96 w-10/12 border border-gray-800 bg-beige">
               <Display
                 seconds={formatSeconds(state.seconds)}
                 minutes={formatMinutes(state.seconds)}
