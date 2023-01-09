@@ -1,8 +1,15 @@
-# Teacher's Timer
+# Teacher Tools
 
-Simple stopwatch timer for teachers to use in their classrooms.
+A growing suite of tools for teachers to use in their classrooms. 
 
-A web app that can be used on any device with a web browser. It is designed to be used on a projector or TV screen so that the timer can be seen by the entire class.
+Tools Planned:
+
+-[x] Stopwatch
+-[ ] Timer
+-[ ] Interval Timer
+-[ ] Random Name Wheel
+-[ ] Seating Chart
+..and many more!
 
 [Live demo](https://teachers-tools.netlify.app)
 
