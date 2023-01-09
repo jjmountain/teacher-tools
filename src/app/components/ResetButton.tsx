@@ -2,15 +2,15 @@ export const ResetButton = ({ onClick }: any) => {
   return (
     <div
       onClick={onClick}
-      className="bg-white group rounded-full border p-5 border-gray-600 active:bg-gray-300"
+      className="bg-spring-wood-50 group border-2 p-5 border-gray-600 active:bg-gray-100 mr-3 ml-3"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        strokeWidth="1"
+        // strokeWidth="1"
         stroke="currentColor"
-        className="w-10 h-10 md:w-16 md:h-16"
+        className="w-10 h-10 md:w-16 md:h-16 stroke-gray-500 hover:stroke-gray-900 stroke-1"
       >
         <path
           strokeLinecap="round"
