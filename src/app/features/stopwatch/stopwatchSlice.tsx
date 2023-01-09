@@ -1,35 +1,35 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 interface StopwatchState {
-  timerState: "playing" | "paused" | "stopped";
-  seconds: number;
+  timerState: 'playing' | 'paused' | 'stopped'
+  seconds: number
 }
 
 const initialState: StopwatchState = {
-  timerState: "stopped",
+  timerState: 'stopped',
   seconds: 0,
-};
+}
 
 export const stopwatchSlice = createSlice({
-  name: "stopwatch",
+  name: 'stopwatch',
   initialState,
   reducers: {
     tick: (state) => {
-      state.seconds += 1;
+      state.seconds += 1
     },
     play: (state) => {
-      state.timerState = "playing";
+      state.timerState = 'playing'
     },
     pause: (state) => {
-      state.timerState = "paused";
+      state.timerState = 'paused'
     },
     reset: (state) => {
-      state.timerState = "stopped";
-      state.seconds = 0;
+      state.timerState = 'stopped'
+      state.seconds = 0
     },
   },
-});
+})
 
-export const { tick, play, pause, reset } = stopwatchSlice.actions;
+export const { tick, play, pause, reset } = stopwatchSlice.actions
 
-export default stopwatchSlice.reducer;
+export default stopwatchSlice.reducer
