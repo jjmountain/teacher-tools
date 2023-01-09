@@ -4,7 +4,7 @@ export type TimerState = {
 };
 
 export type TimerAction = {
-  type: "SET" | "PLAY" | "PAUSE" | "RESET" | "TICK";  
+  type: "SET" | "PLAY" | "PAUSE" | "RESET" | "TICK";
 };
 
 export type DisplayState = {
@@ -13,15 +13,28 @@ export type DisplayState = {
   seconds: string;
 };
 
+export type AppCardProps = {
+  name: string;
+  route: string;
+};
 
 export const setClock = (clockInput: string[]) => {
-  return({
-    type: 'SET',
-    clockInput
-  })
-}
+  return {
+    type: "SET",
+    clockInput,
+  };
+};
 
 export type TimerActionPayload = {
-  type: "SET" | "PRESET" | "PLAY" | "PAUSE" | "RESTART" | "RESET" | "TICK" | "ZERO" | "ADDMIN"; 
+  type:
+    | "SET"
+    | "PRESET"
+    | "PLAY"
+    | "PAUSE"
+    | "RESTART"
+    | "RESET"
+    | "TICK"
+    | "ZERO"
+    | "ADDMIN";
   payload: any;
-}
+};

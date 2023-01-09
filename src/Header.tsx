@@ -1,11 +1,32 @@
+import { NavLink, Link } from "react-router-dom";
+
 const Header = () => {
-return (
-  <nav className="h-[50px] bg-gray-700 flex flex-row justify-center items-center">
-  <a className="text-blue-400 m-10 flex items-center" href='/' >Home</a>
-  <a className="text-blue-400 m-10" href='/stopwatch' >Stopwatch</a>
-  <a className="text-blue-400 m-10" href='/timer' >Timer</a>
-</nav>
-)
+  const activeStyle = {
+    textDecoration: "underline",
+    fontWeight: 500,
+  };
+
+  return (
+    <>
+      <Link to="/">
+        <header className="w-full h-24 flex justify-center items-center text-4xl">
+          Teacher Tools
+        </header>
+      </Link>
+      <nav className="h-[50px] text-sm md:text-base uppercase border-t border-b text-black border-slate-900 bg-beige flex flex-row justify-center items-center">
+        <NavLink to="stopwatch" className="mr-10">
+          {({ isActive }) => (
+            <span className={isActive ? "underline" : ""}>Stopwatch</span>
+          )}
+        </NavLink>
+        <NavLink to="timer" className="mr-10">
+          {({ isActive }) => (
+            <span className={isActive ? "underline" : ""}>timer</span>
+          )}
+        </NavLink>
+      </nav>
+    </>
+  );
 };
 
 export default Header;
