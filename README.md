@@ -4,11 +4,11 @@ A growing suite of tools for teachers to use in their classrooms.
 
 Tools Planned:
 
--[x] Stopwatch
--[ ] Timer
--[ ] Interval Timer
--[ ] Random Name Wheel
--[ ] Seating Chart
+- [x] Stopwatch
+- [ ] Timer
+- [ ] Interval Timer
+- [ ] Random Name Wheel
+- [ ] Seating Chart
 ..and many more!
 
 [Live demo](https://teachers-tools.netlify.app)
