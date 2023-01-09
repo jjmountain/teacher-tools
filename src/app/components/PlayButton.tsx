@@ -24,8 +24,6 @@ export const PlayButton = ({ onClick, state }: any) => {
     );
   };
 
-  console.log("timerState", state.timerState);
-
   return (
     <div
       onClick={onClick}

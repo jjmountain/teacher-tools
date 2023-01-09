@@ -1,10 +1,10 @@
 import { Routes, Route } from "react-router";
-import Stopwatch from "./Stopwatch";
-import Timer from "./Timer";
-import Homepage from "./Homepage";
-import Header from "./Header";
-import Footer from "./Footer";
-import NamePicker from "./NamePicker";
+import Stopwatch from "./app/Stopwatch";
+import Timer from "./app/Timer";
+import Homepage from "./app/Homepage";
+import Header from "./app/Header";
+import Footer from "./app/components/Footer";
+import NamePicker from "./app/NamePicker";
 
 const App = () => {
   return (

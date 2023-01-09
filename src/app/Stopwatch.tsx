@@ -1,39 +1,10 @@
-import React, { useReducer, Dispatch, useEffect } from "react";
+import React, { useEffect } from "react";
 import { PlayButton } from "./components/PlayButton";
 import { ResetButton } from "./components/ResetButton";
-import { TimerState, TimerAction, DisplayState } from "./types";
-import "./App.css";
-import GithubLogo from "./github-mark.png";
-
-const initialState: TimerState = {
-  timerState: "stopped",
-  seconds: 0,
-};
-
-// create a timer that logs the time to the screen and has a start stop and reset button
-
-// on reset
-
-const reducer = (
-  state: typeof initialState,
-  action: TimerAction
-): TimerState => {
-  switch (action.type) {
-    case "TICK":
-      return { ...state, seconds: state.seconds + 1 };
-    case "PLAY":
-      return { ...state, timerState: "playing" };
-    case "PAUSE":
-      return { ...state, timerState: "paused" };
-    case "RESET":
-      return {
-        seconds: 0,
-        timerState: "stopped",
-      };
-    default:
-      throw new Error();
-  }
-};
+import { DisplayState } from "../types";
+import "../App.css";
+import { useAppSelector, useAppDispatch } from "./hooks";
+import { tick, play, pause, reset } from "./features/stopwatch/stopwatchSlice";
 
 export const Display = ({ seconds, minutes, hours }: DisplayState) => {
   return (
@@ -62,35 +33,34 @@ export const Display = ({ seconds, minutes, hours }: DisplayState) => {
   );
 };
 
-const Controls = ({
-  dispatch,
-  state,
-}: {
-  state: TimerState;
-  dispatch: Dispatch<TimerAction>;
-}) => {
-  const reset = () => dispatch({ type: "RESET" });
+const Controls = () => {
+  const stopwatchState = useAppSelector((state) => state.stopwatch);
+  const dispatch = useAppDispatch();
+
+  const { timerState } = stopwatchState;
 
   const toggle = () => {
-    if (state.timerState === "paused" || state.timerState === "stopped") {
-      dispatch({ type: "PLAY" });
-    } else if (state.timerState === "playing") {
-      dispatch({ type: "PAUSE" });
+    if (timerState === "paused" || timerState === "stopped") {
+      console.log("toggle clicked", play, stopwatchState);
+      dispatch(play());
+    } else if (timerState === "playing") {
+      dispatch(pause());
     }
   };
 
   return (
     <div className="flex h-full flex-row cursor-pointer items-center justify-center ">
-      <PlayButton state={state} onClick={toggle} />
-      <ResetButton onClick={reset} />
+      <PlayButton state={stopwatchState} onClick={toggle} />
+      <ResetButton onClick={() => dispatch(reset())} />
     </div>
   );
 };
 
 const Stopwatch = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const stopwatchState = useAppSelector((state) => state.stopwatch);
+  const dispatch = useAppDispatch();
 
-  const { timerState } = state;
+  const { timerState, seconds } = stopwatchState;
 
   const idRef = React.useRef<ReturnType<typeof setInterval | any>>(0);
 
@@ -112,7 +82,7 @@ const Stopwatch = () => {
   useEffect(() => {
     if (timerState === "playing") {
       idRef.current = setInterval(() => {
-        dispatch({ type: "TICK" });
+        dispatch(tick());
       }, 1000);
     }
     return () => {
@@ -128,25 +98,14 @@ const Stopwatch = () => {
           <div className="mt-8 flex justify-center flex-col items-center">
             <div className="flex flex-col my-10 h-96 w-10/12 border border-gray-800 bg-beige">
               <Display
-                seconds={formatSeconds(state.seconds)}
-                minutes={formatMinutes(state.seconds)}
-                hours={formatHours(state.seconds)}
+                seconds={formatSeconds(seconds)}
+                minutes={formatMinutes(seconds)}
+                hours={formatHours(seconds)}
               />
-              <Controls state={state} dispatch={dispatch} />
+              <Controls />
             </div>
           </div>
         </div>
-        {/* <div className="text-lg">
-          Built in React and Typescript by{" "}
-          <a
-            href="https://github.com/jjmountain"
-            target="_blank"
-            rel="noreferrer"
-            className="text-blue-700"
-          >
-            @jjmountain
-          </a>
-        </div> */}
       </div>
     </div>
   );
