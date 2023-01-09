@@ -1,37 +1,10 @@
 import React, { useEffect } from "react";
-import { PlayButton } from "./components/PlayButton";
-import { ResetButton } from "./components/ResetButton";
-import { DisplayState } from "../types";
-import "../App.css";
-import { useAppSelector, useAppDispatch } from "./hooks";
-import { tick, play, pause, reset } from "./features/stopwatch/stopwatchSlice";
-
-export const Display = ({ seconds, minutes, hours }: DisplayState) => {
-  return (
-    <div className="stopwatch-display w-full flex justify-center h-24 mt-8">
-      <div className="h-full px-8 md:px-20   text-gray-900 text-4xl sm:text-6xl md:text-7xl lg:text-8xl grid grid-cols-8 gap-4 overflow-hidden">
-        <div className="flex items-center justify-center mr-2 ">{hours[0]}</div>
-        <div className="flex items-center justify-center ">{hours[1]}</div>
-
-        <div className="flex items-center justify-center mb-1 text-gray-900">
-          :
-        </div>
-        <div className="flex items-center justify-center mr-2">
-          {minutes[0]}
-        </div>
-        <div className="flex items-center justify-center ">{minutes[1]}</div>
-
-        <div className="flex items-center justify-center mb-1 text-gray-900">
-          :
-        </div>
-        <div className="flex items-center justify-center mr-2">
-          {seconds[0]}
-        </div>
-        <div className="flex items-center justify-center ">{seconds[1]}</div>
-      </div>
-    </div>
-  );
-};
+import { PlayButton } from "../../components/PlayButton";
+import { ResetButton } from "../../components/ResetButton";
+import Display from "../../components/Display";
+import "../../../App.css";
+import { useAppSelector, useAppDispatch } from "../../hooks";
+import { tick, play, pause, reset } from "./stopwatchSlice";
 
 const Controls = () => {
   const stopwatchState = useAppSelector((state) => state.stopwatch);
@@ -92,11 +65,11 @@ const Stopwatch = () => {
   }, [timerState]);
 
   return (
-    <div className="h-screen min-h-[calc(100vh-100px)] max-h-[calc(100vh-100px)]">
+    <div className="min-h-[calc(100vh-300px)] max-h-[calc(100vh-100px)]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 flex flex-col justify-between items-center ">
         <div>
           <div className="mt-8 flex justify-center flex-col items-center">
-            <div className="flex flex-col my-10 h-96 w-10/12 border border-gray-800 bg-beige">
+            <div className="flex flex-col my-10 h-96 w-10/12 border border-gray-800 bg-spring-wood-100">
               <Display
                 seconds={formatSeconds(seconds)}
                 minutes={formatMinutes(seconds)}

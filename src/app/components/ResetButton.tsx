@@ -2,7 +2,7 @@ export const ResetButton = ({ onClick }: any) => {
   return (
     <div
       onClick={onClick}
-      className="bg-beige group border-2 p-5 border-gray-600 active:bg-gray-100 mr-3 ml-3"
+      className="bg-spring-wood-50 group border-2 p-5 border-gray-600 active:bg-gray-100 mr-3 ml-3"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

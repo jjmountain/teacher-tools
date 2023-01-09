@@ -5,20 +5,27 @@ import React, {
   Dispatch,
   useReducer,
 } from "react";
-import { TimerState, TimerActionPayload, DisplayState } from "../types";
-import { PlayButton } from "./components/PlayButton";
-import { ResetButton } from "./components/ResetButton";
-import { AddMinuteButton } from "./components/AddMinuteButton";
+import { TimerState, TimerActionPayload, DisplayState } from "../../../types";
+import { PlayButton } from "../../components/PlayButton";
+import { ResetButton } from "../../components/ResetButton";
+import { AddMinuteButton } from "../../components/AddMinuteButton";
 
-const alarm = require("./sounds/alarm-beep.wav");
+const alarm = require("../../sounds/alarm-beep.wav");
 const alarmSound = new Audio(alarm);
-const warning = require("./sounds/warning.wav");
+const warning = require("../../sounds/warning.wav");
 const warningSound = new Audio(warning);
 
 const initialState: TimerState = {
   timerState: "stopped",
   seconds: 0,
 };
+
+// TODOS
+// 1 - Remove duplication of components. Use the same componets with Stopwatch as much as possible (.e.g Display)
+// 2 - Remove duplication of logic. Use the same logic with Stopwatch as much as possible (.e.g formatSeconds). Helper functions
+// that are used by multiple componets should live in the Lib directory
+// 3 - Implement this in Redux Toolkit - use Stopwatch as an example and follow the same structure
+// 4 - Styling - should match the aesthetic of Stopwatch - this can be achieved with tailwind styles
 
 const toSeconds = (timeInput: string[]) => {
   let hours = parseInt(timeInput.slice(0, 2).join(""));

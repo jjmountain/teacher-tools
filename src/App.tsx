@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router";
-import Stopwatch from "./app/Stopwatch";
-import Timer from "./app/Timer";
+import Stopwatch from "./app/features/stopwatch/Stopwatch";
+import Timer from "./app/features/timer/Timer";
 import Homepage from "./app/Homepage";
 import Header from "./app/Header";
 import Footer from "./app/components/Footer";
