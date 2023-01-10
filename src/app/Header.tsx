@@ -1,11 +1,6 @@
 import { NavLink, Link } from 'react-router-dom'
 
 const Header = () => {
-  const activeStyle = {
-    textDecoration: 'underline',
-    fontWeight: 500,
-  }
-
   return (
     <>
       <Link to='/'>
