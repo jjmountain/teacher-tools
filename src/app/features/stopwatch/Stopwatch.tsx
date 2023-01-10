@@ -1,33 +1,9 @@
 import React, { useEffect } from 'react'
-import { PlayButton } from '../../components/PlayButton'
-import { ResetButton } from '../../components/ResetButton'
 import Display from '../../components/Display'
-import '../../../App.css'
+import Controls from './Controls'
 import { useAppSelector, useAppDispatch } from '../../hooks'
-import { tick, play, pause, reset } from './stopwatchSlice'
-
-const Controls = () => {
-  const stopwatchState = useAppSelector((state) => state.stopwatch)
-  const dispatch = useAppDispatch()
-
-  const { timerState } = stopwatchState
-
-  const toggle = () => {
-    if (timerState === 'paused' || timerState === 'stopped') {
-      console.log('toggle clicked', play, stopwatchState)
-      dispatch(play())
-    } else if (timerState === 'playing') {
-      dispatch(pause())
-    }
-  }
-
-  return (
-    <div className='flex h-full flex-row cursor-pointer items-center justify-center '>
-      <PlayButton state={stopwatchState} onClick={toggle} />
-      <ResetButton onClick={() => dispatch(reset())} />
-    </div>
-  )
-}
+import { tick } from './stopwatchSlice'
+import '../../../App.css'
 
 const Stopwatch = () => {
   const stopwatchState = useAppSelector((state) => state.stopwatch)
@@ -35,7 +11,7 @@ const Stopwatch = () => {
 
   const { timerState, seconds } = stopwatchState
 
-  const idRef = React.useRef<ReturnType<typeof setInterval | any>>(0)
+  const idRef = React.useRef<NodeJS.Timeout | number>(0)
 
   const formatSeconds = (seconds: number) => {
     return `0${seconds % 60}`.slice(-2)

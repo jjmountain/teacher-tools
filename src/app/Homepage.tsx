@@ -11,6 +11,8 @@ const Homepage = () => {
         <AppCard name='Seating Chart' route='#' underConstruction />
         <AppCard name='Feedback Generator' route='#' underConstruction />
         <AppCard name='Crossword Maker' route='#' underConstruction />
+        <AppCard name='Class Chatroom' route='#' underConstruction />
+        <AppCard name='Lesson Planner' route='#' underConstruction />
       </div>
     </div>
   )

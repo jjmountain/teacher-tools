@@ -1,7 +1,13 @@
-// import React, { Dispatch } from "React";
-// import { TimerState, TimerAction, DisplayState } from "../types";
+import React from 'react'
+import { useAppSelector } from '../hooks'
 
-export const PlayButton = ({ onClick, state }: any) => {
+interface Props {
+  onClick: () => void
+}
+
+export const PlayButton: React.FC<Props> = ({ onClick }) => {
+  const state = useAppSelector((state) => state.stopwatch)
+
   const PausedPath = () => {
     return (
       <path

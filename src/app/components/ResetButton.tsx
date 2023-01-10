@@ -1,4 +1,10 @@
-export const ResetButton = ({ onClick }: any) => {
+import React from 'react'
+
+interface Props {
+  onClick: () => void
+}
+
+export const ResetButton: React.FC<Props> = ({ onClick }) => {
   return (
     <div
       onClick={onClick}

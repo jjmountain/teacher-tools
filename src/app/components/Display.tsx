@@ -1,4 +1,8 @@
-import { DisplayState } from '../../types'
+type DisplayState = {
+  hours: string
+  minutes: string
+  seconds: string
+}
 
 const Display = ({ seconds, minutes, hours }: DisplayState) => {
   return (
