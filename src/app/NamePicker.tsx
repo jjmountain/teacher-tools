@@ -1,5 +1,5 @@
 const NamePicker = () => {
-  return <div>NamePicker</div>;
-};
+  return <div>NamePicker</div>
+}
 
-export default NamePicker;
+export default NamePicker
