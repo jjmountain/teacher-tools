@@ -1,5 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@200;300;400&family=Source+Code+Pro:wght@200;300;400;500&display=swap');
+
 .App {
   text-align: center;
+  background-color: #f9f7f3;
 }
 
 .App-logo {
@@ -14,7 +17,6 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
