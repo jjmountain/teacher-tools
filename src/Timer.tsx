@@ -185,7 +185,8 @@ const Timer = () => {
   const [warningThreshold, setWarningThreshold] = useState(0);
   const [presetting, setPresetting] = useState(true)
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [reminderInterval, setReminderInterval] = useState(-1)
+  const [reminderInterval, setReminderInterval] = useState(-1);
+  const [showInstructions, setShowInstructions] = useState(false);
   const { timerState } = state;
   const idRef = React.useRef<ReturnType<typeof setInterval | any>>(0);
 
@@ -210,6 +211,8 @@ const Timer = () => {
       let mins = state.seconds / 60
       msg.text = mins === 1 ? `${state.seconds / 60} minute remains` : `${state.seconds / 60} minutes remain`;
       window.speechSynthesis.speak(msg);
+      let voices = speechSynthesis.getVoices();
+      console.log(voices)
     }
   }
 
@@ -300,7 +303,6 @@ const Timer = () => {
             let tempClockArray = clockInputRef.current;
             tempClockArray.unshift('0');
             tempClockArray.pop();
-            console.log(tempClockArray)
             _setClockInput(tempClockArray);
             dispatch({ type: "PRESET", payload: tempClockArray});
           }
@@ -323,14 +325,17 @@ const Timer = () => {
     }
   };
 
+  const toggleInstructions = () => {
+    setShowInstructions(!showInstructions);
+  }
 
   return (
     <div className="timer-page flex flex-col justify-center items-center bg-gradient-to-r from-cyan-500 to-blue-700 min-h-[calc(100vh-100px)]">
 
-      <div className='timer-body flex flex-col my-10 h-160 w-10/12 bg-gray-700/90 rounded-xl max-w-[800px]'>
-        <h1 className='title text-[#B2DB1B] text-5xl mt-8 text-center'>Timer</h1>
+      <div className='timer-body flex flex-col my-10 h-[500px] w-10/12 bg-gray-700/90 rounded-xl max-w-[800px]'>
+        <h1 className='text-green-300 text-5xl mt-8 text-center'>Timer</h1>
         <input id='time-entry-field' className='h-0 w-0' onChange={addDigit} />
-        <div onClick={allowTimeSetting} className="clock">
+        <div onClick={allowTimeSetting} className="clock cursor-pointer">
           <Display
             seconds={presetting ? clockInput.slice(4,6).join('') : formatSeconds(state.seconds)}
             minutes={presetting ? clockInput.slice(2,4).join('') : formatMinutes(state.seconds)}
@@ -357,6 +362,7 @@ const Timer = () => {
             onChange={(e) => setWarningThreshold(parseInt(e.target.value))}
             value={warningThreshold}
             id='slider'
+            className=""
           />
         </div>
         <div className='remaining-time-reminders mt-5 flex flex-row justify-center mb-5'>
@@ -368,8 +374,26 @@ const Timer = () => {
             <option value="10">every 10 minutes</option>
           </select>
         </div>
-        <div></div>
+        <div className='flex flex-row justify-end items-center mr-3'>
+          <h2 className="text-green-300 cursor-pointer" onClick={toggleInstructions} >Instructions</h2>
+        </div>
       </div>
+
+      {showInstructions && 
+      <div className="bg-gray-700/90 rounded-xl w-[290px] p-3 absolute right-[25px] h-[500px] max-[1450px]:static max-[1410px]:w-10/12 max-[1420px]:max-w-[800px]">
+        <h1 className="text-green-300 text-2xl text-center mb-2">Instructions</h1>
+        <ul className="list-disc text-white pl-4">
+          <li className="mb-2">Click on the clock face and type in your desired time.</li>
+          <li className="mb-2">Use the play/pause button to toggle the timer on or off.</li>
+          <li className="mb-2">The reset button stops the timer and resets it to the previously set time.</li>
+          <li className="mb-2">The +1 button can be used to add a minute to the remaining time, whether the timer is playing or not.</li>
+          <li className="mb-2">The warning threshold allows you to set a warning beep for up to 15 seconds before the timer ends.</li>
+          <li className="mb-2">The remaining time selector will provide voice audio stating remaining time.</li>
+        </ul>
+      </div>
+      }
+
+    
 
     </div>
   )
